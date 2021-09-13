@@ -20,4 +20,35 @@ export class Cache {
 			'live_time': Date.now() + this.time
 		}
 	}
+
+	getSize() {
+		return String(Object.keys(this.cache).length);
+	}
+
+	getList() {
+		let list = '';
+
+		for (const url in this.cache) {
+			list = list + url + ' ' + this.cache[url].status + ' ' + this.formatDate(this.cache[url]['date_create']) + '<br>\n';
+		}
+
+		return list;
+	}
+
+	clear() {
+		Object.keys(this.cache).forEach(key => {
+			delete this.cache[key];
+		})
+	}
+
+	formatDate(timestamp) {
+		let date = new Date(timestamp)
+
+		return date.getDate() +
+			"." + (date.getMonth() + 1) +
+			"." + date.getFullYear() +
+			" " + date.getHours() +
+			":" + date.getMinutes() +
+			":" + date.getSeconds()
+	}
 }

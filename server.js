@@ -9,10 +9,32 @@ const app = express();
 app.listen(3000, () => console.log(`http://localhost:3000`))
 
 /**
+ * Метод получения количество кешированных url
+ */
+app.get('/cnt', async (req, res, next) => {
+    return res.status(200).send(CACHE.getSize());
+});
+
+/**
+ * Метод получения списка кешированных url
+ */
+app.get('/status', async (req, res, next) => {
+    return res.status(200).send(CACHE.getList());
+});
+
+/**
+ * Метод принудительного сброса кеша
+ */
+app.get('/clear_cache', async (req, res, next) => {
+    CACHE.clear()
+    return res.status(200).send('The cache has been deleted');
+});
+
+/**
  * Метод отдачи отрендеренного контента
  * @type {null}
  */
-APP.get('/ssr', async (req, res, next) => {
+app.get('/ssr', async (req, res, next) => {
 
     const {url} = req.query;
 
