@@ -21,6 +21,14 @@ export class Cache {
 		}
 	}
 
+	check() {
+		for (const url in this.cache) {
+			if (Date.now() > this.cache[url]['live_time']) {
+				delete this.cache[url];
+			}
+		}
+	}
+
 	getSize() {
 		return String(Object.keys(this.cache).length);
 	}

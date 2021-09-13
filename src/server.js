@@ -2,8 +2,11 @@ import express from 'express';
 
 import {ssr} from './functions/ssr.js'
 import {Cache} from "./functions/cache";
+import {Cron} from "./cron";
 
 const CACHE = new Cache();
+const CRON = new Cron(CACHE);
+CRON.initTasks();
 
 const app = express();
 app.listen(3000, () => console.log(`http://localhost:3000`))
