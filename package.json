@@ -1,0 +1,30 @@
+{
+  "name": "node-ssr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node ./src/server.js",
+    "build": "NODE_ENV=production babel ./src --out-dir dist",
+    "server": "node ./dist/index.js"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.8.4",
+    "command-line-args": "^5.1.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "node-cron": "^3.0.0",
+    "puppeteer": "^10.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "eslint": "^6.8.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "nodemon": "^2.0.2"
+  },
+  "type": "module"
+}
