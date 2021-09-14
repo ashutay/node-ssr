@@ -53,6 +53,14 @@ export async function ssr(url) {
                 }
             }
 
+            /**
+             * Удаление всего JS
+             */
+            await page.evaluate(() => {
+                const elements = document.querySelectorAll('script:not([type="application/ld+json"]), link[rel="import"]');
+                elements.forEach(e => e.remove());
+            });
+
             let html = await page.content();
 
             await page.close();
