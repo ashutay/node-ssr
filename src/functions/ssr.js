@@ -1,6 +1,11 @@
 import puppeteer from 'puppeteer';
 
-export async function ssr(url) {
+/**
+ * https://developers.google.com/web/tools/puppeteer/articles/ssr#reuseinstance
+ * @param {string} url URL to prerender.
+ * @param {boolean} excludeJs
+ */
+export async function ssr(url, excludeJs) {
 
     const browser = await puppeteer.launch({
         args: [
@@ -56,10 +61,12 @@ export async function ssr(url) {
             /**
              * Удаление всего JS
              */
-            await page.evaluate(() => {
-                const elements = document.querySelectorAll('script:not([type="application/ld+json"]), link[rel="import"]');
-                elements.forEach(e => e.remove());
-            });
+            if (excludeJs) {
+                await page.evaluate(() => {
+                    const elements = document.querySelectorAll('script:not([type="application/ld+json"]), link[rel="import"]');
+                    elements.forEach(e => e.remove());
+                });
+            }
 
             let html = await page.content();
 
