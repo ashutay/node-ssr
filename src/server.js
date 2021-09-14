@@ -53,10 +53,17 @@ app.get('/ssr', async (req, res, next) => {
         return res.status(page.status).send(page.html);
     }
 
-    const {html, status} = await ssr(url, true);
+    const {html, status, redirect} = await ssr(url, true);
 
     if (status === 200) {
         CACHE.setPage(url, html, status)
+    }
+
+    /**
+     * Обработка редиректов
+     */
+    if (redirect) {
+        return res.set('Redirect', redirect).status(status).send();
     }
 
     res.status(status).send(html);

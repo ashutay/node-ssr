@@ -19,6 +19,14 @@ export async function ssr(url) {
     page.setViewport({ width: 1280, height: 926 });
 
     try {
+
+        /**
+         * Установка http_auth из .enl.local
+         */
+        if (process.env.HTTP_USER && process.env.HTTP_PASS) {
+            await page.authenticate({'username': process.env.HTTP_USER, 'password': process.env.HTTP_PASS});
+        }
+
         const response = await page.goto(url, {
             timeout: 25000,
             waitUntil: 'networkidle2'
@@ -27,13 +35,30 @@ export async function ssr(url) {
         if (response.status() < 400) {
 
             let status = response.status();
+            let redirect = '';
+
+            /**
+             * Обработка 301 и 302 редиректа
+             * @type {!Array<!Request>}
+             */
+            const chain = response.request().redirectChain();
+            for ( let num in chain ) {
+                if(chain[num].response().headers().p3p)
+                {
+                    let chainStatus = chain[num].response().headers().status;
+                    if ((chainStatus === '301') || (chainStatus === '302')) {
+                        status = chainStatus;
+                        redirect = chain[num].response().headers().location;
+                    }
+                }
+            }
 
             let html = await page.content();
 
             await page.close();
             browser.close();
 
-            return {html, status: status}
+            return {html, status: status, redirect: redirect}
         }
 
         let html = null;
